@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PyCairo Visual Documentation</title>
+<link rel="stylesheet" href="css/pycairo.css" type="text/css" />
+<link rel="stylesheet" href="css/pygments.css" type="text/css" />
+</head>
+
+<h2>PyCairo Visual Documentation</h2>
+
+<pre>Author: Nicolas Seriot
+Date: 2024-08-12 17:37:28
+<a href="https://cairographics.org/pycairo/">PyCairo</a> Version: 1.18.0
+GitHub: <a href="https://github.com/nst/PyCairoVisualDoc">https://github.com/nst/PyCairoVisualDoc</a></pre>
+
+<h4>Content</h4>
+<ol>
+<li>Shapes
+<ul>
+<li><a href="#1_shapes.basic_shapes">basic_shapes.py</a></li>
+<li><a href="#1_shapes.bezier_curve">bezier_curve.py</a></li>
+<li><a href="#1_shapes.dashed_lines">dashed_lines.py</a></li>
+<li><a href="#1_shapes.line_join_line_cap">line_join_line_cap.py</a></li>
+</ul>
+</li>
+<li>Transforms
+<ul>
+<li><a href="#2_transforms.invert_y_coordinates">invert_y_coordinates.py</a></li>
+<li><a href="#2_transforms.matrix">matrix.py</a></li>
+<li><a href="#2_transforms.rotate">rotate.py</a></li>
+<li><a href="#2_transforms.translate_and_scale">translate_and_scale.py</a></li>
+</ul>
+</li>
+<li>Clip and mask
+<ul>
+<li><a href="#3_clip_and_mask.clip">clip.py</a></li>
+<li><a href="#3_clip_and_mask.mask">mask.py</a></li>
+</ul>
+</li>
+<li>Patterns
+<ul>
+<li><a href="#4_patterns.patterns">patterns.py</a></li>
+<li><a href="#4_patterns.repeating_pattern">repeating_pattern.py</a></li>
+</ul>
+</li>
+<li>Gradients
+<ul>
+<li><a href="#5_gradients.linear_gradient">linear_gradient.py</a></li>
+<li><a href="#5_gradients.radial_gradients">radial_gradients.py</a></li>
+</ul>
+</li>
+<li>Text and fonts
+<ul>
+<li><a href="#6_text_and_fonts.text">text.py</a></li>
+</ul>
+</li>
+<li>Antialiasing
+<ul>
+<li><a href="#7_antialiasing.antialiasing">antialiasing.py</a></li>
+</ul>
+</li>
+<li>Animated gifs
+<ul>
+<li><a href="#8_animated_gifs.gif">gif.py</a></li>
+<li><a href="#8_animated_gifs.sq_logo_animated">sq_logo_animated.py</a></li>
+</ul>
+</li>
+<li>Formats
+<ul>
+<li><a href="#9_formats.eps">eps.py</a></li>
+<li><a href="#9_formats.multipage_pdf">multipage_pdf.py</a></li>
+<li><a href="#9_formats.pdf">pdf.py</a></li>
+<li><a href="#9_formats.png">png.py</a></li>
+<li><a href="#9_formats.ps">ps.py</a></li>
+<li><a href="#9_formats.svg">svg.py</a></li>
+</ul>
+</li>
+</ol>
+<table>
+<tr id="1_shapes.basic_shapes">
+<td>
+<img src="img/1_shapes/basic_shapes.png" alt="1_shapes.basic_shapes"/>
+</td>
+<td>
+<code><b>/1_shapes/basic_shapes.py</b></code>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cairo</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">def</span> <span class="nf">draw_png</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+    
+    <span class="c1"># background</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">paint</span><span class="p">()</span>
+
+    <span class="c1"># lines</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">line_to</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rel_line_to</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rel_move_to</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rel_line_to</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_line_width</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">stroke</span><span class="p">()</span>
+    
+    <span class="c1"># rectangles</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_line_width</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">stroke</span><span class="p">()</span>
+    
+    <span class="c1"># arcs</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># x, y, radius, start_angle, stop_angle</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill_preserve</span><span class="p">()</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_line_width</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">stroke</span><span class="p">()</span>
+    
+    <span class="n">surface</span><span class="o">.</span><span class="n">write_to_png</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="1_shapes.bezier_curve">
+<td>
+<img src="img/1_shapes/bezier_curve.png" alt="1_shapes.bezier_curve"/>
+</td>
+<td>
+<code><b>/1_shapes/bezier_curve.py</b></code>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cairo</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">def</span> <span class="nf">draw_png</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+    
+    <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">220</span>    
+    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="mi">350</span><span class="p">,</span> <span class="mi">180</span>
+    <span class="n">x3</span><span class="p">,</span> <span class="n">y3</span> <span class="o">=</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">50</span>
+        
+    <span class="n">c</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">curve_to</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">y3</span><span class="p">)</span>        
+    <span class="n">c</span><span class="o">.</span><span class="n">stroke</span><span class="p">()</span>
+    
+    <span class="k">for</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">),</span> <span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span> <span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">),</span> <span class="p">(</span><span class="n">x3</span><span class="p">,</span> <span class="n">y3</span><span class="p">)]:</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">y</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">stroke</span><span class="p">()</span>
+    
+    <span class="n">surface</span><span class="o">.</span><span class="n">write_to_png</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="1_shapes.dashed_lines">
+<td>
+<img src="img/1_shapes/dashed_lines.png" alt="1_shapes.dashed_lines"/>
+</td>
+<td>
+<code><b>/1_shapes/dashed_lines.py</b></code>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cairo</span>
+
+<span class="k">def</span> <span class="nf">draw_png</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">set_line_width</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># 15 drawn, 10 not drawn, etc</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_dash</span><span class="p">([</span><span class="mi">15</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>  
+    <span class="n">c</span><span class="o">.</span><span class="n">line_to</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">stroke</span><span class="p">()</span>
+
+    <span class="c1"># 10 drawn, 30 not drawn, 5 drawn, then</span>
+    <span class="c1"># 10 *not* drawn, 30 drawn, 5 not drawn, etc</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_dash</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">line_to</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">stroke</span><span class="p">()</span>
+
+    <span class="n">surface</span><span class="o">.</span><span class="n">write_to_png</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="1_shapes.line_join_line_cap">
+<td>
+<img src="img/1_shapes/line_join_line_cap.png" alt="1_shapes.line_join_line_cap"/>
+</td>
+<td>
+<code><b>/1_shapes/line_join_line_cap.py</b></code>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cairo</span>
+
+<span class="k">def</span> <span class="nf">draw_png</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">set_line_width</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rel_line_to</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rel_line_to</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_line_join</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">LINE_JOIN_MITER</span><span class="p">)</span> <span class="c1"># default</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">stroke</span><span class="p">()</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rel_line_to</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rel_line_to</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_line_join</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">LINE_JOIN_BEVEL</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">stroke</span><span class="p">()</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rel_line_to</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rel_line_to</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_line_join</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">LINE_JOIN_ROUND</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">stroke</span><span class="p">()</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rel_line_to</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_line_cap</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">LINE_CAP_BUTT</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">stroke</span><span class="p">()</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="mi">240</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rel_line_to</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_line_cap</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">LINE_CAP_ROUND</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">stroke</span><span class="p">()</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="mi">280</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rel_line_to</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_line_cap</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">LINE_CAP_SQUARE</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">stroke</span><span class="p">()</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="mi">350</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>        
+    <span class="n">c</span><span class="o">.</span><span class="n">set_line_join</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">LINE_JOIN_ROUND</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">stroke</span><span class="p">()</span>
+    
+    <span class="n">surface</span><span class="o">.</span><span class="n">write_to_png</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="2_transforms.invert_y_coordinates">
+<td>
+<img src="img/2_transforms/invert_y_coordinates.png" alt="2_transforms.invert_y_coordinates"/>
+</td>
+<td>
+<code><b>/2_transforms/invert_y_coordinates.py</b></code>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cairo</span>
+
+<span class="k">def</span> <span class="nf">draw_line</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">line_to</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">stroke</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">draw_png</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+    <span class="n">s</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">draw_line</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    
+    <span class="c1"># invert y coordinates</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="n">yy</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">get_height</span><span class="p">())</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">draw_line</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    
+    <span class="n">s</span><span class="o">.</span><span class="n">write_to_png</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="n">draw</span><span class="p">()</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="2_transforms.matrix">
+<td>
+<img src="img/2_transforms/matrix.png" alt="2_transforms.matrix"/>
+</td>
+<td>
+<code><b>/2_transforms/matrix.py</b></code>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cairo</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">def</span> <span class="nf">draw_rect</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">draw_png_asd</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+    
+    <span class="n">draw_rect</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    
+    <span class="c1"># x_new = xx * x + xy * y + x0</span>
+    <span class="c1"># y_new = yx * x + yy * y + y0</span>
+
+    <span class="c1"># cairo.Matrix(xx, yx,</span>
+    <span class="c1">#              xy, yy,</span>
+    <span class="c1">#              x0, y0)</span>
+    
+    <span class="n">m</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span>
+                     <span class="mi">0</span><span class="p">,</span>   <span class="mf">1.0</span><span class="p">,</span>
+                     <span class="mi">256</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+    
+    <span class="n">draw_rect</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    
+    <span class="n">surface</span><span class="o">.</span><span class="n">write_to_png</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="2_transforms.rotate">
+<td>
+<img src="img/2_transforms/rotate.png" alt="2_transforms.rotate"/>
+</td>
+<td>
+<code><b>/2_transforms/rotate.py</b></code>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cairo</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">def</span> <span class="nf">draw_png_rotate</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span> <span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">paint</span><span class="p">()</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">stroke</span><span class="p">()</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">restore</span><span class="p">()</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">4.0</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">stroke</span><span class="p">()</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">restore</span><span class="p">()</span>
+    
+    <span class="n">surface</span><span class="o">.</span><span class="n">write_to_png</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="2_transforms.translate_and_scale">
+<td>
+<img src="img/2_transforms/translate_and_scale.png" alt="2_transforms.translate_and_scale"/>
+</td>
+<td>
+<code><b>/2_transforms/translate_and_scale.py</b></code>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cairo</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">def</span> <span class="nf">draw_picture</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">scale</span><span class="p">):</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="mi">160</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+        
+    <span class="n">c</span><span class="o">.</span><span class="n">restore</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">draw_png_asd</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span> <span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+    <span class="c1">#surface.set_device_scale(2,2)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+    <span class="c1">#c.set_antialias(cairo.ANTIALIAS_NONE)</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">paint</span><span class="p">()</span>
+    
+    <span class="n">draw_picture</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">draw_picture</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">350</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">draw_picture</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">290</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">170</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+    
+    <span class="n">surface</span><span class="o">.</span><span class="n">write_to_png</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="3_clip_and_mask.clip">
+<td>
+<img src="img/3_clip_and_mask/clip.png" alt="3_clip_and_mask.clip"/>
+</td>
+<td>
+<code><b>/3_clip_and_mask/clip.py</b></code>
+<div class="highlight"><pre><span></span>    <span class="n">c</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">clip</span><span class="p">()</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_surface</span><span class="p">(</span><span class="n">ims</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>    
+    <span class="n">c</span><span class="o">.</span><span class="n">paint</span><span class="p">()</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">restore</span><span class="p">()</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_surface</span><span class="p">(</span><span class="n">ims</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>    
+    <span class="n">c</span><span class="o">.</span><span class="n">paint</span><span class="p">()</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="3_clip_and_mask.mask">
+<td>
+<img src="img/3_clip_and_mask/mask.png" alt="3_clip_and_mask.mask"/>
+</td>
+<td>
+<code><b>/3_clip_and_mask/mask.py</b></code>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cairo</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="k">def</span> <span class="nf">create_from_png</span><span class="p">(</span><span class="n">image_name</span><span class="p">):</span>
+    <span class="c1"># ensure we can read image when working from another dir</span>
+    <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="n">dir_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span>
+    <span class="n">ims</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="o">.</span><span class="n">create_from_png</span><span class="p">(</span><span class="n">image_name</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ims</span>
+
+<span class="k">def</span> <span class="nf">draw_png</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+    <span class="c1"># draw mask alone</span>
+    <span class="n">mask_img</span> <span class="o">=</span> <span class="n">create_from_png</span><span class="p">(</span><span class="s1">&#39;mask.png&#39;</span><span class="p">)</span>  
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_surface</span><span class="p">(</span><span class="n">mask_img</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">paint</span><span class="p">()</span>
+    
+    <span class="n">church_img</span> <span class="o">=</span> <span class="n">create_from_png</span><span class="p">(</span><span class="s1">&#39;church.png&#39;</span><span class="p">)</span>  
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_surface</span><span class="p">(</span><span class="n">church_img</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">paint</span><span class="p">()</span>
+    
+    <span class="c1"># clip masking area</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">church_img</span><span class="o">.</span><span class="n">get_width</span><span class="p">(),</span> <span class="n">church_img</span><span class="o">.</span><span class="n">get_height</span><span class="p">())</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">clip</span><span class="p">()</span>
+    
+    <span class="c1"># apply mask</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_operator</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">OPERATOR_DEST_IN</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_surface</span><span class="p">(</span><span class="n">mask_img</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">paint</span><span class="p">()</span>
+    
+    <span class="n">surface</span><span class="o">.</span><span class="n">write_to_png</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="n">draw_png</span><span class="p">(</span><span class="s2">&quot;masked_church.png&quot;</span><span class="p">)</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="4_patterns.patterns">
+<td>
+<img src="img/4_patterns/patterns.png" alt="4_patterns.patterns"/>
+</td>
+<td>
+<code><b>/4_patterns/patterns.py</b></code>
+<div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="kn">import</span> <span class="nn">cairo</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="k">def</span> <span class="nf">create_from_png</span><span class="p">(</span><span class="n">image_name</span><span class="p">):</span>
+    <span class="c1"># ensure we can read image when working from another dir</span>
+    <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="n">dir_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span>
+    <span class="n">ims</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="o">.</span><span class="n">create_from_png</span><span class="p">(</span><span class="n">image_name</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ims</span>
+
+<span class="k">def</span> <span class="nf">draw_png</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+    
+    <span class="n">pat_surface</span> <span class="o">=</span> <span class="n">create_from_png</span><span class="p">(</span><span class="s2">&quot;brick.png&quot;</span><span class="p">)</span>
+    <span class="n">pat</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">SurfacePattern</span><span class="p">(</span><span class="n">pat_surface</span><span class="p">)</span>
+    <span class="n">pat</span><span class="o">.</span><span class="n">set_extend</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">EXTEND_REPEAT</span><span class="p">)</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source</span><span class="p">(</span><span class="n">pat</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_surface</span><span class="p">(</span><span class="n">pat_surface</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>    
+    <span class="n">c</span><span class="o">.</span><span class="n">paint</span><span class="p">()</span>
+
+    <span class="n">surface</span><span class="o">.</span><span class="n">write_to_png</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="n">draw_gif_sqlogo</span><span class="p">(</span><span class="s2">&quot;brick.png&quot;</span><span class="p">)</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="4_patterns.repeating_pattern">
+<td>
+<img src="img/4_patterns/repeating_pattern.png" alt="4_patterns.repeating_pattern"/>
+</td>
+<td>
+<code><b>/4_patterns/repeating_pattern.py</b></code>
+<div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="kn">import</span> <span class="nn">cairo</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="k">def</span> <span class="nf">create_from_png</span><span class="p">(</span><span class="n">image_name</span><span class="p">):</span>
+    <span class="c1"># ensure we can read image when working from another dir</span>
+    <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="n">dir_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span>
+    <span class="n">ims</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="o">.</span><span class="n">create_from_png</span><span class="p">(</span><span class="n">image_name</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ims</span>
+
+<span class="k">def</span> <span class="nf">draw_png</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+    
+    <span class="c1"># pattern surface</span>
+    <span class="n">ps</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">pc</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span>
+    
+    <span class="c1"># draw blue circles on the pattern surface context</span>
+    <span class="n">pc</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">pc</span><span class="o">.</span><span class="n">paint</span><span class="p">()</span>
+    <span class="n">pc</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">pc</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="mf">3.14159</span><span class="p">)</span>
+    <span class="n">pc</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+
+    <span class="c1"># create the pattern</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">SurfacePattern</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">set_extend</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">EXTEND_REPEAT</span><span class="p">)</span>
+
+    <span class="c1"># Use the pattern to fill the main surface</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+    
+    <span class="n">surface</span><span class="o">.</span><span class="n">write_to_png</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="n">draw_png</span><span class="p">(</span><span class="s2">&quot;repeating_pattern.png&quot;</span><span class="p">)</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="5_gradients.linear_gradient">
+<td>
+<img src="img/5_gradients/linear_gradient.png" alt="5_gradients.linear_gradient"/>
+</td>
+<td>
+<code><b>/5_gradients/linear_gradient.py</b></code>
+<div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="kn">import</span> <span class="nn">cairo</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">def</span> <span class="nf">draw_png</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+    
+    <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">220</span>
+    <span class="n">lg</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">LinearGradient</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
+    <span class="n">lg</span><span class="o">.</span><span class="n">add_color_stop_rgba</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> 
+    <span class="n">lg</span><span class="o">.</span><span class="n">add_color_stop_rgba</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> 
+    <span class="n">lg</span><span class="o">.</span><span class="n">add_color_stop_rgba</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> 
+
+    <span class="n">c</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source</span><span class="p">(</span><span class="n">lg</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+    
+    <span class="n">surface</span><span class="o">.</span><span class="n">write_to_png</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="n">draw_png</span><span class="p">(</span><span class="s2">&quot;x.gif&quot;</span><span class="p">)</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="5_gradients.radial_gradients">
+<td>
+<img src="img/5_gradients/radial_gradients.png" alt="5_gradients.radial_gradients"/>
+</td>
+<td>
+<code><b>/5_gradients/radial_gradients.py</b></code>
+<div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="kn">import</span> <span class="nn">cairo</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">def</span> <span class="nf">draw_png</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+    
+    <span class="c1"># cx0 - x coordinate for the center of the start circle</span>
+    <span class="c1"># cy0 - y coordinate for the center of the start circle</span>
+    <span class="c1"># radius0 - radius of the start circle</span>
+    <span class="c1"># cx1 - x coordinate for the center of the end circle</span>
+    <span class="c1"># cy1 - y coordinate for the center of the end circle</span>
+    <span class="c1"># radius1 - radius of the end circle</span>
+
+    <span class="n">pat</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">RadialGradient</span><span class="p">(</span><span class="mi">135</span><span class="p">,</span> <span class="mi">130</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span>
+                               <span class="mi">140</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="n">pat</span><span class="o">.</span><span class="n">add_color_stop_rgba</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">pat</span><span class="o">.</span><span class="n">add_color_stop_rgba</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">pat</span><span class="o">.</span><span class="n">add_color_stop_rgba</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source</span><span class="p">(</span><span class="n">pat</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+    
+    <span class="n">surface</span><span class="o">.</span><span class="n">write_to_png</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="n">draw_png</span><span class="p">(</span><span class="s2">&quot;radial_gradient.png&quot;</span><span class="p">)</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="6_text_and_fonts.text">
+<td>
+<img src="img/6_text_and_fonts/text.png" alt="6_text_and_fonts.text"/>
+</td>
+<td>
+<code><b>/6_text_and_fonts/text.py</b></code>
+<div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="kn">import</span> <span class="nn">cairo</span>
+
+<span class="k">def</span> <span class="nf">draw_png</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+    <span class="c1"># choose font</span>
+        
+    <span class="n">c</span><span class="o">.</span><span class="n">select_font_face</span><span class="p">(</span><span class="s2">&quot;Courier New&quot;</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_font_size</span><span class="p">(</span><span class="mi">14</span><span class="p">)</span>
+
+    <span class="c1"># basic example</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">show_text</span><span class="p">(</span><span class="s2">&quot;Hello World&quot;</span><span class="p">)</span>
+
+    <span class="c1"># right align</span>
+
+    <span class="k">for</span> <span class="n">y</span><span class="p">,</span> <span class="n">adj</span> <span class="ow">in</span> <span class="p">[(</span><span class="mi">100</span><span class="p">,</span> <span class="s2">&quot;naughty&quot;</span><span class="p">),</span> <span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="s2">&quot;cool&quot;</span><span class="p">),</span> <span class="p">(</span><span class="mi">140</span><span class="p">,</span> <span class="s2">&quot;bad&quot;</span><span class="p">)]:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> cats&quot;</span> <span class="o">%</span> <span class="n">adj</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">txt_width</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">text_extents</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>        
+        <span class="n">c</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="mi">150</span> <span class="o">-</span> <span class="n">txt_width</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">show_text</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    
+    <span class="c1"># pick another font</span>
+       
+    <span class="n">c</span><span class="o">.</span><span class="n">select_font_face</span><span class="p">(</span><span class="s2">&quot;Times&quot;</span><span class="p">,</span>
+                       <span class="n">cairo</span><span class="o">.</span><span class="n">FONT_SLANT_ITALIC</span><span class="p">,</span>
+                       <span class="n">cairo</span><span class="o">.</span><span class="n">FONT_WEIGHT_BOLD</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_font_size</span><span class="p">(</span><span class="mi">56</span><span class="p">)</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">show_text</span><span class="p">(</span><span class="s2">&quot;Hi there&quot;</span><span class="p">)</span>
+
+    <span class="n">surface</span><span class="o">.</span><span class="n">write_to_png</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="n">draw_gif_sqlogo</span><span class="p">(</span><span class="s2">&quot;x.gif&quot;</span><span class="p">)</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="7_antialiasing.antialiasing">
+<td>
+<img src="img/7_antialiasing/antialiasing.png" alt="7_antialiasing.antialiasing"/>
+</td>
+<td>
+<code><b>/7_antialiasing/antialiasing.py</b></code>
+<div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="kn">import</span> <span class="nn">cairo</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">def</span> <span class="nf">draw_png</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">select_font_face</span><span class="p">(</span><span class="s2">&quot;Courier New&quot;</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_font_size</span><span class="p">(</span><span class="mi">28</span><span class="p">)</span>
+
+    <span class="n">fo</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">FontOptions</span><span class="p">()</span>
+    <span class="n">fo</span><span class="o">.</span><span class="n">set_antialias</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">ANTIALIAS_DEFAULT</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_font_options</span><span class="p">(</span><span class="n">fo</span><span class="p">)</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">show_text</span><span class="p">(</span><span class="s2">&quot;Antialias Default&quot;</span><span class="p">)</span>    
+
+    <span class="n">fo</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">FontOptions</span><span class="p">()</span>
+    <span class="n">fo</span><span class="o">.</span><span class="n">set_antialias</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">ANTIALIAS_NONE</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_font_options</span><span class="p">(</span><span class="n">fo</span><span class="p">)</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">show_text</span><span class="p">(</span><span class="s2">&quot;Antialias None&quot;</span><span class="p">)</span>    
+
+    <span class="c1">#</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">set_antialias</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">ANTIALIAS_DEFAULT</span><span class="p">)</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="mi">170</span><span class="p">,</span> <span class="mi">170</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgba</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">set_antialias</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">ANTIALIAS_NONE</span><span class="p">)</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="mi">370</span><span class="p">,</span> <span class="mi">170</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgba</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+    
+    <span class="n">surface</span><span class="o">.</span><span class="n">write_to_png</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="n">draw_png</span><span class="p">(</span><span class="s2">&quot;x.gif&quot;</span><span class="p">)</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="8_animated_gifs.gif">
+<td>
+<img src="img/8_animated_gifs/gif.gif" alt="8_animated_gifs.gif"/>
+</td>
+<td>
+<code><b>/8_animated_gifs/gif.py</b></code>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">imageio</span>
+
+<span class="k">def</span> <span class="nf">images_paths</span><span class="p">():</span>
+    <span class="c1"># ensure we can read images when working from another dir</span>
+    <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="n">dir_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">dir_path</span><span class="p">,</span> <span class="n">s</span><span class="p">])</span>
+             <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span>
+             <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.png&#39;</span><span class="p">)]</span>
+    <span class="n">files</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">files</span>
+
+<span class="k">def</span> <span class="nf">draw_gif</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+    <span class="n">images</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">images_paths</span><span class="p">():</span>
+        <span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">imageio</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+    
+    <span class="n">imageio</span><span class="o">.</span><span class="n">mimsave</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">images</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;GIF&#39;</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="n">draw_gif</span><span class="p">(</span><span class="s2">&quot;movie.gif&quot;</span><span class="p">)</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="8_animated_gifs.sq_logo_animated">
+<td>
+<img src="img/8_animated_gifs/sq_logo_animated.gif" alt="8_animated_gifs.sq_logo_animated"/>
+</td>
+<td>
+<code><b>/8_animated_gifs/sq_logo_animated.py</b></code>
+<div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="kn">import</span> <span class="nn">cairo</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">imageio</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+
+<span class="n">COLOR_ORANGE_SQ</span> <span class="o">=</span> <span class="p">(</span><span class="mi">250</span><span class="o">/</span><span class="mf">255.</span><span class="p">,</span> <span class="mi">92</span><span class="o">/</span><span class="mf">255.</span><span class="p">,</span> <span class="mi">53</span><span class="o">/</span><span class="mf">255.</span><span class="p">)</span>
+<span class="n">COLOR_WHITE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">as_numpy_array</span><span class="p">(</span><span class="n">surface</span><span class="p">):</span>
+
+    <span class="n">w</span> <span class="o">=</span> <span class="n">surface</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">surface</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span>
+    
+    <span class="n">data</span> <span class="o">=</span> <span class="n">surface</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+    
+    <span class="n">a</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">h</span><span class="p">,</span><span class="n">w</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">uint32</span><span class="p">,</span> <span class="n">buffer</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    
+    <span class="n">i</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">frombytes</span><span class="p">(</span><span class="s2">&quot;RGBA&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">),</span> <span class="n">a</span><span class="p">,</span> <span class="s2">&quot;raw&quot;</span><span class="p">,</span> <span class="s2">&quot;BGRA&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">add_image</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">surface</span><span class="p">):</span>
+    
+    <span class="n">a</span> <span class="o">=</span> <span class="n">as_numpy_array</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">append_data</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    
+<span class="k">def</span> <span class="nf">draw_gif_sqlogo</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+    <span class="n">gif_writer</span> <span class="o">=</span> <span class="n">imageio</span><span class="o">.</span><span class="n">get_writer</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        
+    <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">280</span><span class="p">,</span> <span class="mi">280</span>
+    
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+    
+    <span class="c1"># white background</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">paint</span><span class="p">()</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+    <span class="c1">#add_image(gif_writer, surface)</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+
+    <span class="c1"># main circle</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span> <span class="p">(</span><span class="o">*</span><span class="n">COLOR_ORANGE_SQ</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+    <span class="n">add_image</span><span class="p">(</span><span class="n">gif_writer</span><span class="p">,</span> <span class="n">surface</span><span class="p">)</span>
+    
+    <span class="c1"># white rects</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span> <span class="p">(</span><span class="o">*</span><span class="n">COLOR_WHITE</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+    <span class="n">add_image</span><span class="p">(</span><span class="n">gif_writer</span><span class="p">,</span> <span class="n">surface</span><span class="p">)</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+    <span class="n">add_image</span><span class="p">(</span><span class="n">gif_writer</span><span class="p">,</span> <span class="n">surface</span><span class="p">)</span>
+    
+    <span class="c1"># orange part of the bridge</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span> <span class="p">(</span><span class="o">*</span><span class="n">COLOR_ORANGE_SQ</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">145</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+    <span class="n">add_image</span><span class="p">(</span><span class="n">gif_writer</span><span class="p">,</span> <span class="n">surface</span><span class="p">)</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="mi">130</span><span class="p">,</span> <span class="mi">145</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+    <span class="n">add_image</span><span class="p">(</span><span class="n">gif_writer</span><span class="p">,</span> <span class="n">surface</span><span class="p">)</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="mi">95</span><span class="p">,</span> <span class="mi">145</span><span class="p">,</span>  <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+    <span class="n">add_image</span><span class="p">(</span><span class="n">gif_writer</span><span class="p">,</span> <span class="n">surface</span><span class="p">)</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="mi">145</span><span class="p">,</span> <span class="mi">145</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+    <span class="n">add_image</span><span class="p">(</span><span class="n">gif_writer</span><span class="p">,</span> <span class="n">surface</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="n">draw_gif_sqlogo</span><span class="p">(</span><span class="s2">&quot;sq.gif&quot;</span><span class="p">)</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="9_formats.eps">
+<td>
+<a href="img/9_formats/eps.eps">eps.eps</a>
+</td>
+<td>
+<code><b>/9_formats/eps.py</b></code>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cairo</span>
+<span class="kn">from</span> <span class="nn">cairo</span> <span class="kn">import</span> <span class="n">PSSurface</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">def</span> <span class="nf">draw_eps</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">PSSurface</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">240</span><span class="p">)</span>
+    <span class="n">surface</span><span class="o">.</span><span class="n">set_eps</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">paint</span><span class="p">()</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgba</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+    
+    <span class="n">surface</span><span class="o">.</span><span class="n">show_page</span><span class="p">()</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="9_formats.multipage_pdf">
+<td>
+<a href="img/9_formats/multipage_pdf.pdf">multipage_pdf.pdf</a>
+</td>
+<td>
+<code><b>/9_formats/multipage_pdf.py</b></code>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cairo</span>
+<span class="kn">from</span> <span class="nn">cairo</span> <span class="kn">import</span> <span class="n">PDFSurface</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">def</span> <span class="nf">draw_pdf</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">PDFSurface</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">240</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">paint</span><span class="p">()</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgba</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+
+    <span class="n">surface</span><span class="o">.</span><span class="n">show_page</span><span class="p">()</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">paint</span><span class="p">()</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgba</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+
+    <span class="n">surface</span><span class="o">.</span><span class="n">show_page</span><span class="p">()</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="9_formats.pdf">
+<td>
+<a href="img/9_formats/pdf.pdf">pdf.pdf</a>
+</td>
+<td>
+<code><b>/9_formats/pdf.py</b></code>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cairo</span>
+<span class="kn">from</span> <span class="nn">cairo</span> <span class="kn">import</span> <span class="n">PDFSurface</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">def</span> <span class="nf">draw_pdf</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">PDFSurface</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">240</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">paint</span><span class="p">()</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgba</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+
+    <span class="n">surface</span><span class="o">.</span><span class="n">show_page</span><span class="p">()</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="9_formats.png">
+<td>
+<img src="img/9_formats/png.png" alt="9_formats.png"/>
+</td>
+<td>
+<code><b>/9_formats/png.py</b></code>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cairo</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">def</span> <span class="nf">draw_png</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">ImageSurface</span><span class="p">(</span><span class="n">cairo</span><span class="o">.</span><span class="n">FORMAT_ARGB32</span><span class="p">,</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">240</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">paint</span><span class="p">()</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgba</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+    
+    <span class="n">surface</span><span class="o">.</span><span class="n">write_to_png</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="9_formats.ps">
+<td>
+<a href="img/9_formats/ps.ps">ps.ps</a>
+</td>
+<td>
+<code><b>/9_formats/ps.py</b></code>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cairo</span>
+<span class="kn">from</span> <span class="nn">cairo</span> <span class="kn">import</span> <span class="n">PSSurface</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">def</span> <span class="nf">draw_ps</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">PSSurface</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">240</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">paint</span><span class="p">()</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgba</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+
+    <span class="n">surface</span><span class="o">.</span><span class="n">show_page</span><span class="p">()</span>
+</pre></div>
+
+</td>
+</tr>
+<tr id="9_formats.svg">
+<td>
+<img src="img/9_formats/svg.svg" alt="9_formats.svg"/>
+</td>
+<td>
+<code><b>/9_formats/svg.py</b></code>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cairo</span>
+<span class="kn">from</span> <span class="nn">cairo</span> <span class="kn">import</span> <span class="n">SVGSurface</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">def</span> <span class="nf">draw_svg_asd</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">SVGSurface</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">240</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cairo</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">paint</span><span class="p">()</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">arc</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_source_rgba</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+
+    <span class="n">surface</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+</pre></div>
+
+</td>
+</tr>
+</table>
+
+
+</body>
+</html>

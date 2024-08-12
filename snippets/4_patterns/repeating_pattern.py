@@ -18,19 +18,28 @@ def draw_png(filename):
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 512, 256)
     c = cairo.Context(surface)
     
-    pat_surface = create_from_png("brick.png")
-    pat = cairo.SurfacePattern(pat_surface)
-    pat.set_extend(cairo.EXTEND_REPEAT)
+    # pattern surface
+    ps = cairo.ImageSurface(cairo.FORMAT_ARGB32, 50, 50)
+    pc = cairo.Context(ps)
     
-    c.set_source(pat)
-    c.arc(100, 100, 50, 0, 2*math.pi)
+    # draw blue circles on the pattern surface context
+    pc.set_source_rgb(1, 1, 1)
+    pc.paint()
+    pc.set_source_rgb(0, 0, 1)
+    pc.arc(25, 25, 10, 0, 2 * 3.14159)
+    pc.fill()
+
+    # create the pattern
+    p = cairo.SurfacePattern(ps)
+    p.set_extend(cairo.EXTEND_REPEAT)
+
+    # Use the pattern to fill the main surface
+    c.set_source(p)
+    c.rectangle(100, 50, 300, 200)
     c.fill()
     
-    c.set_source_surface(pat_surface, 256, 50)    
-    c.paint()
-
     surface.write_to_png(filename)
 
 if __name__ == "__main__":
 
-    draw_gif_sqlogo("brick.png")
+    draw_png("repeating_pattern.png")

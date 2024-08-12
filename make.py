@@ -27,10 +27,10 @@ def call_drawing_function(f):
     m = re.match("draw_(png|svg|pdf|gif|ps|eps).*", f.__name__)
     
     if not m:
-        print "xx", f.__name__
+        print("xx", f.__name__)
         return None
     
-    print "-- %s()" % f.__name__
+    print("-- %s()" % f.__name__)
     
     mod_comps = mod.__name__.split(".")
     dir_comps = ["img"] + mod_comps[1:-1]
@@ -83,7 +83,7 @@ if __name__ == "__main__":
     s += "<h4>Content</h4>\n"
 
     s += "<ol>\n"
-    for name, mods in sorted(sections.iteritems()):
+    for name, mods in sorted(iter(sections.items())):
         s += '<li>%s\n' % " ".join(name.split("_")[1:]).capitalize()
         s += "<ul>\n"
         for mod in mods:
